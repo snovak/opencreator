@@ -1,9 +1,10 @@
-# Opencreator.io Clone - An OPEN SOURCE project. 
+# Opencreator.io Clone 
+An OPEN SOURCE project. 
 
 
 
 TODO:
-- [ ] Init Electron setup with VueJS
+- [x] Init Electron + VueJS + Tailwind CSS
 - [ ] Node canvas
 - [ ] Node creation menu
 - [ ] Node templates
