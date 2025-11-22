@@ -1,11 +1,13 @@
 <script setup>
-import { ref, toRef } from 'vue'
+import { ref, toRef, onMounted } from 'vue'
 import { MiniMap } from '@vue-flow/minimap'
-import { Position, VueFlow } from '@vue-flow/core'
+import { Position, VueFlow, addEdge, useVueFlow } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
 import TextOutputNode from './components/TextNode.vue'
 import TextViewerNode from './components/MarkdownViewerNode.vue'
+import NodeMenu from './components/NodeMenu.vue'
+
 
 const nodes = ref([
   {
@@ -36,7 +38,7 @@ const edges = ref([
     target: '2',
     animated: true,
   },
-    {
+  {
     id: 'e1a-3',
     source: '1',
     sourceHandle: 'a',
@@ -44,6 +46,33 @@ const edges = ref([
     animated: true,
   },
 ])
+
+const { removeEdges } = useVueFlow()
+const selectedEdges = ref([])
+
+function onSelectionChange({ edges: selected }) {
+  selectedEdges.value = selected
+  console.log('Selected edges:', selected) // DEBUG: Log selected edges
+}
+// ADD: Connection handler with debugging
+function onConnect(params) {
+  console.log('Connection attempt:', params) // DEBUG: Log connection params
+  // Add the edge with animation
+  edges.value = addEdge({ ...params, animated: true }, edges.value)
+  console.log('Edge added successfully:', edges.value[edges.value.length - 1]) // DEBUG: Log new edge
+}
+
+// ADD: Listen for Delete key to remove selected edges
+onMounted(() => {
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Delete' && selectedEdges.value.length > 0) {
+      const edgeIds = selectedEdges.value.map((edge) => edge.id)
+      removeEdges(edgeIds)
+      console.log('Deleted edges:', edgeIds) // DEBUG: Log deleted edges
+      selectedEdges.value = [] // Reset selection
+    }
+  })
+})
 
 // minimap stroke color functions (simplified for text nodes)
 function nodeStroke(n) {
@@ -65,9 +94,12 @@ function nodeColor(n) {
 <template>
   <VueFlow
     v-model:nodes="nodes"
-    :edges="edges"
+    v-model:edges="edges"
     class="custom-node-flow"
     fit-view-on-init
+    @connect="onConnect"
+    @selection-change="onSelectionChange" 
+    :selection-key-code="['Shift']"
   >
     <template #node-text-output="props">
       <TextOutputNode :id="props.id" :data="props.data" />
@@ -80,5 +112,6 @@ function nodeColor(n) {
     <MiniMap :node-stroke-color="nodeStroke" :node-color="nodeColor" />
     <Controls />
     <Background />
+    <NodeMenu />
   </VueFlow>
 </template>

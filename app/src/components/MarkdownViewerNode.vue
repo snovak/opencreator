@@ -1,6 +1,6 @@
 <script setup>
 import { Handle, Position, useNodeConnections, useNodesData } from '@vue-flow/core'
-import {marked} from 'marked';
+import { marked } from 'marked';
 
 const connections = useNodeConnections({
   handleType: 'target',
