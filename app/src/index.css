@@ -1,1 +1,57 @@
-@import "tailwindcss";   
+
+@import '@vue-flow/core/dist/style.css';
+@import '@vue-flow/core/dist/theme-default.css';
+@import '@vue-flow/controls/dist/style.css';
+@import '@vue-flow/minimap/dist/style.css';
+@import '@vue-flow/node-resizer/dist/style.css';
+
+html,
+body,
+#app {
+  margin: 0;
+  height: 100%;
+}
+
+#app {
+  text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+
+.vue-flow__minimap {
+  transform: scale(75%);
+  transform-origin: bottom right;
+}
+
+.vue-flow__edges {
+    filter:invert(100%)
+}
+
+.vue-flow__handle {
+    height:24px;
+    width:8px;
+    border-radius:4px
+}
+
+.vue-flow__node {
+    border:1px solid #777;
+    padding:10px;
+    border-radius:10px;
+    background:#f5f5f5;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    max-width:250px
+}
+
+.vue-flow__node .vue-flow__handle {
+    background-color:#007e00;
+    height:24px;
+    width:8px;
+    border-radius:4px
+}
