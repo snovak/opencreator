@@ -6,6 +6,7 @@
     <div v-if="isMenuOpen" class="dropdown">
       <button @click.stop="addTextNode">Add Text Node</button>
       <button @click.stop="addMarkdownViewer">Add Markdown Viewer</button>
+      <button @click.stop="addImageNode">Add Image Node</button>
     </div>
   </div>
 </template>
@@ -16,7 +17,7 @@ import { ref } from 'vue';
 import { useVueFlow, Position } from '@vue-flow/core';
 
 const isMenuOpen = ref(false);
-const { addNodes, nodes } = useVueFlow(); // FIXED: Use 'nodes' ref (no 'getNodes')
+const { addNodes, nodes } = useVueFlow();
 
 function toggleMenu() {
   isMenuOpen.value = !isMenuOpen.value;
@@ -24,32 +25,49 @@ function toggleMenu() {
 
 function addTextNode() {
   const id = `text-${Date.now()}`;
-  const existingNodes = nodes.value; // FIXED: Access via nodes.value (array of current nodes)
-  const offset = existingNodes.length * 20; // Incremental offset to avoid overlap
+  const existingNodes = nodes.value;
+  const offset = existingNodes.length * 20;
   addNodes([{
     id,
     type: 'text-output',
     data: { text: '' },
-    position: { x: 250 + Math.random() * 50 + offset, y: 5 + offset }, // ADD: Random/incremental position
-    sourcePosition: Position.Right, // ADD: Explicitly set (matches component)
+    position: { x: 250 + Math.random() * 50 + offset, y: 5 + offset },
+    sourcePosition: Position.Right,
   }]);
   isMenuOpen.value = false;
 }
 
 function addMarkdownViewer() {
   const id = `viewer-${Date.now()}`;
-  const existingNodes = nodes.value; // FIXED: Access via nodes.value
+  const existingNodes = nodes.value;
   const offset = existingNodes.length * 20;
   addNodes([{
     id,
     type: 'text-viewer',
     position: { x: 100 + Math.random() * 50 + offset, y: 5 + offset },
-    targetPosition: Position.Left, // ADD: Explicitly set (matches component)
+    targetPosition: Position.Left,
+  }]);
+  isMenuOpen.value = false;
+}
+
+function addImageNode() {
+  const id = `image-${Date.now()}`;
+  const existingNodes = nodes.value;
+  const offset = existingNodes.length * 20;
+  addNodes([{
+    id,
+    type: 'image-node',
+    data: { imageSrc: '', imageName: '' },
+    position: { x: 150 + Math.random() * 50 + offset, y: 5 + offset },
+    sourcePosition: Position.Right,
+    targetPosition: Position.Left,
   }]);
   isMenuOpen.value = false;
 }
 </script>
+
 <style>
+/* Existing styles remain the same */
 #menu {
   position: fixed;
   top: 10px;

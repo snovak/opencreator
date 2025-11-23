@@ -6,8 +6,8 @@ import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
 import TextOutputNode from './components/TextNode.vue'
 import TextViewerNode from './components/MarkdownViewerNode.vue'
+import ImageNode from './components/ImageNode.vue'
 import NodeMenu from './components/NodeMenu.vue'
-
 
 const nodes = ref([
   {
@@ -52,35 +52,34 @@ const selectedEdges = ref([])
 
 function onSelectionChange({ edges: selected }) {
   selectedEdges.value = selected
-  console.log('Selected edges:', selected) // DEBUG: Log selected edges
-}
-// ADD: Connection handler with debugging
-function onConnect(params) {
-  console.log('Connection attempt:', params) // DEBUG: Log connection params
-  // Add the edge with animation
-  edges.value = addEdge({ ...params, animated: true }, edges.value)
-  console.log('Edge added successfully:', edges.value[edges.value.length - 1]) // DEBUG: Log new edge
+  console.log('Selected edges:', selected)
 }
 
-// ADD: Listen for Delete key to remove selected edges
+function onConnect(params) {
+  console.log('Connection attempt:', params)
+  edges.value = addEdge({ ...params, animated: true }, edges.value)
+  console.log('Edge added successfully:', edges.value[edges.value.length - 1])
+}
+
 onMounted(() => {
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Delete' && selectedEdges.value.length > 0) {
       const edgeIds = selectedEdges.value.map((edge) => edge.id)
       removeEdges(edgeIds)
-      console.log('Deleted edges:', edgeIds) // DEBUG: Log deleted edges
-      selectedEdges.value = [] // Reset selection
+      console.log('Deleted edges:', edgeIds)
+      selectedEdges.value = []
     }
   })
 })
 
-// minimap stroke color functions (simplified for text nodes)
 function nodeStroke(n) {
   switch (n.type) {
     case 'text-output':
       return '#0041d0'
     case 'text-viewer':
       return '#ff0072'
+    case 'image-node':
+      return '#ff9900'
     default:
       return '#eee'
   }
@@ -107,6 +106,10 @@ function nodeColor(n) {
 
     <template #node-text-viewer>
       <TextViewerNode />
+    </template>
+
+    <template #node-image-node="props">
+      <ImageNode :id="props.id" :data="props.data" />
     </template>
 
     <MiniMap :node-stroke-color="nodeStroke" :node-color="nodeColor" />

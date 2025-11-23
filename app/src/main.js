@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 
@@ -7,6 +7,12 @@ if (started) {
   app.quit();
 }
 
+// Add IPC handler for file dialog
+ipcMain.handle('open-file-dialog', async (event, options) => {
+  const result = await dialog.showOpenDialog(options);
+  return result;
+});
+
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -14,6 +20,8 @@ const createWindow = () => {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true, // Enable context isolation for security
+      nodeIntegration: false, // Disable node integration for security
     },
   });
 
