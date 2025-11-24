@@ -28,10 +28,12 @@
     "@electron-forge/plugin-vite": "^7.10.2",
     "@electron/fuses": "^1.8.0",
     "@tailwindcss/vite": "^4.1.17",
-    "@vitejs/plugin-vue": "^6.0.2",
+    "@vitejs/plugin-vue": "^5.2.4",
     "electron": "39.2.3",
     "tailwindcss": "^4.1.17",
-    "vite": "^5.4.21"
+    "vite": "^6.4.1",
+    "vite-plugin-vue-devtools": "^8.0.5",
+    "vue-devtools": "^5.1.4"
   },
   "dependencies": {
     "@heroicons/vue": "^1.0.6",
@@ -40,6 +42,8 @@
     "@vue-flow/core": "^1.48.0",
     "@vue-flow/minimap": "^1.5.4",
     "@vue-flow/node-resizer": "^1.5.0",
+    "@vue/devtools": "^8.0.5",
+    "axios": "^1.13.2",
     "drawflow": "^0.0.60",
     "electron-squirrel-startup": "^1.0.1",
     "marked": "^17.0.1",

@@ -7,13 +7,18 @@ import { Controls } from '@vue-flow/controls'
 import TextOutputNode from './components/TextNode.vue'
 import TextViewerNode from './components/MarkdownViewerNode.vue'
 import ImageNode from './components/ImageNode.vue'
+import TextToTextNode from './components/TextToTextNode.vue'
 import NodeMenu from './components/NodeMenu.vue'
+import SelectModel from './components/SelectModel.vue'
 
 const nodes = ref([
   {
     id: '1',
     type: 'text-output',
-    data: { text: '# Hi👋🏻 \nThis is a test' },
+    data: { 
+      text: '# Hi👋🏻 \nThis is a test',
+      title: 'Sample Text'
+    },
     position: { x: 0, y: 200 },
   },
   {
@@ -75,11 +80,13 @@ onMounted(() => {
 function nodeStroke(n) {
   switch (n.type) {
     case 'text-output':
-      return '#0041d0'
+      return '#0F0'
     case 'text-viewer':
-      return '#ff0072'
+      return '#0F0'
     case 'image-node':
-      return '#ff9900'
+      return '#00F'
+    case 'textToText':
+      return '#0F0'
     default:
       return '#eee'
   }
@@ -101,7 +108,10 @@ function nodeColor(n) {
     :selection-key-code="['Shift']"
   >
     <template #node-text-output="props">
-      <TextOutputNode :id="props.id" :data="props.data" />
+      <TextOutputNode 
+        :id="props.id" 
+        :data="props.data" 
+      />
     </template>
 
     <template #node-text-viewer>
@@ -109,12 +119,25 @@ function nodeColor(n) {
     </template>
 
     <template #node-image-node="props">
-      <ImageNode :id="props.id" :data="props.data" />
+      <ImageNode 
+        :id="props.id" 
+        :data="props.data" 
+      />
+    </template>
+
+    <template #node-textToText="props">
+      <TextToTextNode 
+        :id="props.id" 
+        :data="props.data" 
+      />
     </template>
 
     <MiniMap :node-stroke-color="nodeStroke" :node-color="nodeColor" />
     <Controls />
     <Background />
     <NodeMenu />
+    
+    <!-- Global Model Selector -->
+    <SelectModel />
   </VueFlow>
 </template>

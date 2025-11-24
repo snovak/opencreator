@@ -1,4 +1,7 @@
 
+@import 'tailwindcss';
+
+
 @import '@vue-flow/core/dist/style.css';
 @import '@vue-flow/core/dist/theme-default.css';
 @import '@vue-flow/controls/dist/style.css';
@@ -19,6 +22,10 @@ body,
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+textarea {
+  background-color: #FFF;
 }
 
 .vue-flow__minimap {
@@ -45,8 +52,9 @@ body,
     height:19px;
     width:16px;
     border-radius:5px;
+    display:flex;
 }
-.textNode .vue-flow__handle, .markdownNode .vue-flow__handle {
+.textNode .vue-flow__handle, .markdownNode .vue-flow__handle, .textToTextNode .vue-flow__handle {
     background-color:#00d600;
 }
 
@@ -55,7 +63,21 @@ body,
 }
 
 .vue-flow__handle svg {
-  width: 10px;
-  height:10px;
+  align-items: center;
+  justify-content: center;
   color: #FFF;
+}
+
+.btn {
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  width: 100%;
+  justify-content: center;
 }
