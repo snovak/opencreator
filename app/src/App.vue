@@ -10,13 +10,15 @@ import ImageNode from './components/ImageNode.vue'
 import TextToTextNode from './components/TextToTextNode.vue'
 import NodeMenu from './components/NodeMenu.vue'
 import SelectModel from './components/SelectModel.vue'
+import TextToImageNode from './components/TextToImageNode.vue'
+
 
 const nodes = ref([
   {
     id: '1',
     type: 'text-output',
     data: { 
-      text: '# Hi👋🏻 \nThis is a test',
+      text: 'Generate an image of Tux, the Linux mascot, wearing a space suit.',
       title: 'Sample Text'
     },
     position: { x: 0, y: 200 },
@@ -29,7 +31,7 @@ const nodes = ref([
   },
   {
     id: '3',
-    type: 'text-viewer',
+    type: 'textToImage',
     position: { x: 350, y: 250 },
     targetPosition: Position.Left,
   },
@@ -39,14 +41,15 @@ const edges = ref([
   {
     id: 'e1a-2',
     source: '1',
-    sourceHandle: 'a',
+    sourceHandle: 'output',
     target: '2',
     animated: true,
   },
   {
     id: 'e1a-3',
     source: '1',
-    sourceHandle: 'a',
+    sourceHandle: 'output',
+    targetHandle: 'input',
     target: '3',
     animated: true,
   },
@@ -87,6 +90,8 @@ function nodeStroke(n) {
       return '#00F'
     case 'textToText':
       return '#0F0'
+    case 'textToImage':
+      return '#00F'
     default:
       return '#eee'
   }
@@ -127,6 +132,13 @@ function nodeColor(n) {
 
     <template #node-textToText="props">
       <TextToTextNode 
+        :id="props.id" 
+        :data="props.data" 
+      />
+    </template>
+    
+    <template #node-textToImage="props">
+      <TextToImageNode 
         :id="props.id" 
         :data="props.data" 
       />

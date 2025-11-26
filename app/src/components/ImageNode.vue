@@ -29,6 +29,19 @@ const connectedNodeData = useNodesData(() => connections.value[0]?.source)
 const localImageSrc = ref(props.data.imageSrc || '')
 const localImageName = ref(props.data.imageName || '')
 
+// Watch for changes in props.data to handle updates from TextToImageNode
+watch(() => props.data.imageSrc, (newSrc) => {
+  if (newSrc !== undefined && !connectedNodeData.value) {
+    localImageSrc.value = newSrc
+  }
+}, { immediate: true })
+
+watch(() => props.data.imageName, (newName) => {
+  if (newName !== undefined && !connectedNodeData.value) {
+    localImageName.value = newName
+  }
+}, { immediate: true })
+
 // Computed property for displayed image (prioritizes connected data over local)
 const displayedImageSrc = computed(() => {
   return connectedNodeData.value?.data?.imageSrc || localImageSrc.value
@@ -38,12 +51,9 @@ const displayedImageName = computed(() => {
   return connectedNodeData.value?.data?.imageName || localImageName.value
 })
 
-// Watch for changes in connected data and update node data
-watch([connectedNodeData, localImageSrc, localImageName], () => {
-  updateNodeData(props.id, { 
-    imageSrc: displayedImageSrc.value,
-    imageName: displayedImageName.value
-  })
+// Check if the image source is base64 data
+const isBase64Image = computed(() => {
+  return displayedImageSrc.value.startsWith('data:image/')
 })
 
 function loadImage() {
@@ -53,21 +63,31 @@ function loadImage() {
   input.onchange = (e) => {
     const file = e.target.files[0]
     if (file) {
-      localImageSrc.value = URL.createObjectURL(file)
-      localImageName.value = file.name
-      // This will trigger the watcher and update node data
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        localImageSrc.value = event.target.result
+        localImageName.value = file.name
+        updateNodeData(props.id, {
+          imageSrc: localImageSrc.value,
+          imageName: localImageName.value
+        })
+      }
+      reader.readAsDataURL(file)
     }
   }
   input.click()
 }
 
 function clearImage() {
-  if (localImageSrc.value) {
+  if (localImageSrc.value && localImageSrc.value.startsWith('blob:')) {
     URL.revokeObjectURL(localImageSrc.value)
   }
   localImageSrc.value = ''
   localImageName.value = ''
-  // This will trigger the watcher and update node data
+  updateNodeData(props.id, {
+    imageSrc: '',
+    imageName: ''
+  })
 }
 </script>
 
@@ -86,6 +106,12 @@ function clearImage() {
       <div v-if="displayedImageSrc" class="image-preview">
         <img :src="displayedImageSrc" :alt="displayedImageName" class="preview-image" />
         <div class="image-name">{{ displayedImageName }}</div>
+        
+        <!-- Show base64 indicator -->
+        <div v-if="isBase64Image" class="base64-info">
+          <span class="text-xs text-blue-600">Base64 Data</span>
+        </div>
+        
         <button 
           @click="clearImage" 
           class="clear-btn"
@@ -118,8 +144,6 @@ function clearImage() {
   max-width: 250px;
 }
 
-
-
 .image-preview {
   display: flex;
   flex-direction: column;
@@ -132,6 +156,8 @@ function clearImage() {
   max-height: 150px;
   border-radius: 5px;
   border: 1px solid #ddd;
+  object-fit: contain;
+  background: #f9f9f9;
 }
 
 .image-name {
@@ -139,6 +165,13 @@ function clearImage() {
   color: #666;
   word-break: break-all;
   text-align: center;
+}
+
+.base64-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
 }
 
 .connection-info {

@@ -39,7 +39,12 @@
           >
             Add Text To Text Node
           </button>
-
+          <button
+            @click.stop="addTextToImageNode"
+            class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-150"
+          >
+            Add Text To Image Node
+          </button>  
     </div>
   </div>
 </div>
@@ -256,6 +261,24 @@ function addImageNode() {
     type: 'image-node',
     data: { imageSrc: '', imageName: '' },
     position: { x: 150 + Math.random() * 50 + offset, y: 5 + offset },
+    sourcePosition: Position.Right,
+    targetPosition: Position.Left,
+  }]);
+  isMenuOpen.value = false;
+}
+function addTextToImageNode() {
+  const id = `textToImage-${Date.now()}`;
+  const existingNodes = nodes.value;
+  const offset = existingNodes.length * 20;
+  addNodes([{
+    id,
+    type: 'textToImage',
+    data: { 
+      instruction: '',
+      selectedModels: [],
+      selectedDimension: 0
+    },
+    position: { x: 250 + Math.random() * 50 + offset, y: 5 + offset },
     sourcePosition: Position.Right,
     targetPosition: Position.Left,
   }]);

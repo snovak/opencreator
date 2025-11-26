@@ -9,12 +9,17 @@ TODO:
 - [x] AI Service configuration
   - [x] API Key Store
   - [x] API Requests 
-- [ ] Basic Node types
+- [x] Basic Node types
   - [x] Text Node  
   - [x] Markdown Viewer Node
   - [x] Image Node
   - [x] Text to Text Node
-  - [ ] Text to Image Node
+  - [x] Text to Image Node
+- [ ] Advanced Node types
+  - [ ] Image to Text Node  (Image Describer)
+  - [ ] Text to Audio
+  - [ ] Text to Video
+- [ ] Context Menu
 - [ ] Node templates
 
 Progress Screenshot:

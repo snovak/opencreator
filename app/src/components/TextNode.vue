@@ -81,7 +81,7 @@ const inputRef = ref(null)
         <ArrowRightIcon class="w-4 h-4" />
       </Handle>
 
-      <Handle id="a" type="source" :position="Position.Right">
+      <Handle id="output" type="source" :position="Position.Right">
         <ArrowRightIcon class="w-4 h-4" />
       </Handle>
     </div>

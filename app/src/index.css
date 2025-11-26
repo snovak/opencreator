@@ -54,11 +54,11 @@ textarea {
     border-radius:5px;
     display:flex;
 }
-.textNode .vue-flow__handle, .markdownNode .vue-flow__handle, .textToTextNode .vue-flow__handle {
+.textNode .vue-flow__handle, .markdownNode .vue-flow__handle, .textToTextNode .vue-flow__handle, .textHandle {
     background-color:#00d600;
 }
 
-.imageNode .vue-flow__handle {
+.imageNode .vue-flow__handle, .imageHandle {
   background-color:#00a4ff;
 }
 

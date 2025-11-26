@@ -139,6 +139,64 @@ export const useOpenRouterStore = defineStore('openrouter', () => {
     }
   }
 
+  //MARK: generateImage
+  async function generateImage(modelId, prompt, options = {}) {
+    if (!apiKey.value) {
+      throw new Error('OpenRouter API key not set. Use setApiKey() first.')
+    }
+
+    const requestBody = {
+      model: modelId,
+      messages: [{ role: 'user', content: prompt }],
+      modalities: ['image', 'text'],
+      stream: false,
+      ...options
+    }
+
+    const headers = {
+      'Authorization': `Bearer ${apiKey.value}`,
+      'Content-Type': 'application/json',
+      'X-Title': document.title || 'OpenCreator',
+      'HTTP-Referer': window.location.origin
+    }
+
+    const response = await axios.post(
+      'https://openrouter.ai/api/v1/chat/completions',
+      requestBody,
+      { headers }
+    )
+
+    if (!response.data?.choices?.[0]?.message) {
+      throw new Error('Invalid response format from OpenRouter')
+    }
+
+    const message = response.data.choices[0].message
+    const images = []
+    
+    // Extract images from the response
+    if (message.images && Array.isArray(message.images)) {
+      message.images.forEach(img => {
+        if (img?.image_url?.url) {
+          // Handle nested structure: { type: "image_url", image_url: { url: "data:..." } }
+          images.push(img.image_url.url)
+        } else if (typeof img === 'string') {
+          // Handle direct string URLs
+          images.push(img)
+        } else if (img?.url) {
+          // Handle direct url property
+          images.push(img.url)
+        }
+      })
+    }
+    
+    console.log('Extracted image URLs:', images.map(url => url.substring(0, 50) + '...'))
+    
+    return {
+      images: images,
+      text: typeof message.content === 'string' ? message.content : ''
+    }
+  }
+
   function setApiKey(key) {
     apiKey.value = key.trim()
     console.log("setApiKey", apiKey.value)
@@ -266,6 +324,7 @@ export const useOpenRouterStore = defineStore('openrouter', () => {
     fetchModels,
     refreshModels,
     generateText,
+    generateImage,
     setApiKey,
     getModelById,
     getModelByName,
